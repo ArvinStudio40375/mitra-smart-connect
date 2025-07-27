@@ -1,14 +1,50 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from 'react';
+import { SplashScreen } from '@/components/SplashScreen';
+import { MitraAuth } from '@/components/MitraAuth';
+import { MitraDashboard } from '@/components/MitraDashboard';
 
 const Index = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
-  );
+  const [currentScreen, setCurrentScreen] = useState<'splash' | 'auth' | 'dashboard'>('splash');
+  const [currentMitra, setCurrentMitra] = useState<any>(null);
+
+  useEffect(() => {
+    // Check for stored mitra session
+    const storedMitra = localStorage.getItem('mitra-session');
+    if (storedMitra) {
+      setCurrentMitra(JSON.parse(storedMitra));
+      setCurrentScreen('dashboard');
+    }
+  }, []);
+
+  const handleSplashComplete = () => {
+    setCurrentScreen('auth');
+  };
+
+  const handleLogin = (mitra: any) => {
+    setCurrentMitra(mitra);
+    localStorage.setItem('mitra-session', JSON.stringify(mitra));
+    setCurrentScreen('dashboard');
+  };
+
+  const handleLogout = () => {
+    setCurrentMitra(null);
+    localStorage.removeItem('mitra-session');
+    setCurrentScreen('auth');
+  };
+
+  if (currentScreen === 'splash') {
+    return <SplashScreen onComplete={handleSplashComplete} />;
+  }
+
+  if (currentScreen === 'auth') {
+    return <MitraAuth onLogin={handleLogin} />;
+  }
+
+  if (currentScreen === 'dashboard' && currentMitra) {
+    return <MitraDashboard mitra={currentMitra} onLogout={handleLogout} />;
+  }
+
+  return null;
 };
 
 export default Index;
