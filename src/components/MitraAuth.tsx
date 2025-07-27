@@ -48,13 +48,13 @@ export const MitraAuth = ({ onLogin }: MitraAuthProps) => {
 
       if (data.status_verifikasi === 'nonaktif') {
         // Get total tagihan
-        const { data: tagihanData } = await supabase
+        const { data: tagihanData } = await (supabase as any)
           .from('tagihan')
           .select('jumlah')
           .eq('mitra_id', data.id)
           .eq('status', 'belum_bayar');
         
-        const totalTagihan = tagihanData?.reduce((sum, t) => sum + t.jumlah, 0) || 0;
+        const totalTagihan = tagihanData?.reduce((sum: number, t: any) => sum + t.jumlah, 0) || 0;
         
         toast.error(
           `Mohon Maaf Akun Anda Telah Kami Non Aktifkan Dikarenakan Anda Memiliki Tagihan Rp. ${totalTagihan.toLocaleString()}. Karena Sistem kami Otomatis Akan Menon Aktifkan Akun Mitra Ketika Memiliki Tagihan Minimal Rp.50.000,- Ke Atas. Silahkan Ajukan Pengaktifan Akun Kepada Admin Dengan Cara Hubungi VIA WhatsApp Di Nomor 081299660660...`,

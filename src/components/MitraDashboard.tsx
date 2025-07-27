@@ -61,7 +61,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
     
     try {
       // Load pesanan masuk
-      const { data: pesanan } = await supabase
+      const { data: pesanan } = await (supabase as any)
         .from('pesanan')
         .select('*')
         .eq('status', 'menunggu')
@@ -70,7 +70,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
       setPesananMasuk(pesanan || []);
 
       // Load pekerjaan saya
-      const { data: pekerjaan } = await supabase
+      const { data: pekerjaan } = await (supabase as any)
         .from('pesanan')
         .select('*')
         .eq('mitra_id', mitra.id)
@@ -79,7 +79,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
       setPekerjaanSaya(pekerjaan || []);
 
       // Load riwayat
-      const { data: riwayat } = await supabase
+      const { data: riwayat } = await (supabase as any)
         .from('pesanan')
         .select('*')
         .eq('mitra_id', mitra.id)
@@ -89,7 +89,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
       setRiwayatPesanan(riwayat || []);
 
       // Load tagihan
-      const { data: tagihanData } = await supabase
+      const { data: tagihanData } = await (supabase as any)
         .from('tagihan')
         .select('*')
         .eq('mitra_id', mitra.id)
@@ -110,7 +110,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
 
   const handleTerimaPesanan = async (pesananId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('pesanan')
         .update({ 
           status: 'diterima', 
@@ -130,7 +130,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
 
   const handleTolakPesanan = async (pesananId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('pesanan')
         .update({ status: 'ditolak' })
         .eq('id', pesananId);
@@ -146,7 +146,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
 
   const handleMulaiBekerja = async (pesanan: any) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('pesanan')
         .update({ 
           status: 'sedang_dikerjakan',
@@ -176,7 +176,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
       const sisaSetelahPotongan = currentPesanan.tarif - potongan;
 
       // Update pesanan
-      const { error: pesananError } = await supabase
+      const { error: pesananError } = await (supabase as any)
         .from('pesanan')
         .update({ 
           status: 'selesai',
@@ -205,7 +205,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
         const kekurangan = potongan - saldoSaatIni;
         
         // Create tagihan
-        await supabase
+        await (supabase as any)
           .from('tagihan')
           .insert([{
             mitra_id: mitra.id,
@@ -220,7 +220,7 @@ export const MitraDashboard = ({ mitra, onLogout }: MitraDashboardProps) => {
           .eq('id', mitra.id);
 
         // Check total tagihan
-        const { data: totalTagihan } = await supabase
+        const { data: totalTagihan } = await (supabase as any)
           .from('tagihan')
           .select('jumlah')
           .eq('mitra_id', mitra.id)
